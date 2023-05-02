@@ -43,12 +43,20 @@ public class MakeLrc {
         Arrays.stream(subLrcArray).filter(lrc -> Pattern.matches("^\\[\\d{2}:\\d{2}.\\d{2,3}][\\s\\S]*$", lrc)).forEach(lrc -> {
             String time = lrc.substring(0, lrc.indexOf(']') + 1);
             String word = lrc.substring(lrc.indexOf(']') + 1);
+            if ("".equals(word.trim())) {
+                return;
+            }
             if (!map.containsKey(time)) {
                 throw new RuntimeException("副语言歌词与主语言歌词不匹配：" + lrc);
             }
             String wordFromMap = map.get(time);
             map.put(time, wordFromMap + '\n' + word);
         });
-        map.forEach((time, word) -> System.out.println(time + word));
+        StringBuilder content = new StringBuilder();
+        map.forEach((time, word) -> content.append(time).append(word).append('\n'));
+        String result = content.substring(0,content.length() - 1);
+        FileUtil.writeLrc(result);
+        System.out.println(FileUtil.FILE_NAME + "生成成功");
+        System.out.println(result);
     }
 }
