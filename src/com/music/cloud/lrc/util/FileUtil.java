@@ -6,7 +6,7 @@ import java.io.IOException;
 public class FileUtil {
     public static final String FILE_NAME = "歌词.lrc";
 
-    private static final String FILE_PATH = "G:\\歌曲\\Ed Sheeran\\" + FILE_NAME;
+    private static final String FILE_PATH = "G:\\歌曲\\许嵩\\" + FILE_NAME;
 
     public static void writeLrc(String content) {
         try (FileWriter fileWriter = new FileWriter(FILE_PATH)) {

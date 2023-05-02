@@ -28,39 +28,36 @@ public class MakeLrc {
             System.err.println("主字幕为空");
             return;
         }
-        if ("".equals(subLrc)) {
-            FileUtil.writeLrc(mainLrc);
-            System.out.println(FileUtil.FILE_NAME + "生成成功");
-            System.out.println(mainLrc);
-            return;
-        }
+
         String[] mainLrcArray = mainLrc.split("\n");
         Arrays.stream(mainLrcArray).forEach(lrc -> {
             String time = lrc.substring(0, lrc.indexOf(']') + 1);
             String word = lrc.substring(lrc.indexOf(']') + 1);
-            if(map.containsKey(time)){
+            if (map.containsKey(time)) {
                 throw new RuntimeException("主歌词有重复时间轴");
             }
             map.put(time, word);
         });
 
-        //添加副语言歌词
-        String[] subLrcArray = subLrc.split("\n");
-        Arrays.stream(subLrcArray).filter(lrc -> Pattern.matches("^\\[\\d{2}:\\d{2}.\\d{2,3}][\\s\\S]*$", lrc)).forEach(lrc -> {
-            String time = lrc.substring(0, lrc.indexOf(']') + 1);
-            String word = lrc.substring(lrc.indexOf(']') + 1);
-            if ("".equals(word.trim())) {
-                return;
-            }
-            if (!map.containsKey(time)) {
-                throw new RuntimeException("副语言歌词与主语言歌词不匹配：" + lrc);
-            }
-            String wordFromMap = map.get(time);
-            map.put(time, wordFromMap + '\n' + word);
-        });
+        if (!"".equals(subLrc)) {
+            //添加副语言歌词
+            String[] subLrcArray = subLrc.split("\n");
+            Arrays.stream(subLrcArray).filter(lrc -> Pattern.matches("^\\[\\d{2}:\\d{2}.\\d{2,3}][\\s\\S]*$", lrc)).forEach(lrc -> {
+                String time = lrc.substring(0, lrc.indexOf(']') + 1);
+                String word = lrc.substring(lrc.indexOf(']') + 1);
+                if ("".equals(word.trim())) {
+                    return;
+                }
+                if (!map.containsKey(time)) {
+                    throw new RuntimeException("副语言歌词与主语言歌词不匹配：" + lrc);
+                }
+                String wordFromMap = map.get(time);
+                map.put(time, wordFromMap + '\n' + word);
+            });
+        }
         StringBuilder content = new StringBuilder();
         map.forEach((time, word) -> content.append(time).append(word).append('\n'));
-        String result = content.substring(0,content.length() - 1);
+        String result = content.substring(0, content.length() - 1);
         FileUtil.writeLrc(result);
         System.out.println(FileUtil.FILE_NAME + "生成成功");
         System.out.println(result);
