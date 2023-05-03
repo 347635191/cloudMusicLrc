@@ -1,9 +1,8 @@
 package com.music.cloud.lrc.util;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class FileUtil {
     public static final String BASE_DIR = "D:\\lrc";
@@ -15,8 +14,9 @@ public class FileUtil {
             return;
         }
         String filePath = String.format(DEFAULT_FILE_PATH, id);
-        try (FileWriter fileWriter = new FileWriter(filePath)) {
-            fileWriter.append(content);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath), StandardCharsets.UTF_8))) {
+            bufferedWriter.append(content);
+            bufferedWriter.flush();
             LogUtil.log(filePath + "生成成功");
         } catch (IOException e) {
             e.printStackTrace();
