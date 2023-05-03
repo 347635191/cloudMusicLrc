@@ -1,7 +1,7 @@
 package com.music.cloud.lrc.util;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -21,9 +21,10 @@ public class LogUtil {
         if (FileUtil.createDir()) {
             return;
         }
-        try (FileWriter fileWriter = new FileWriter(LogPath, true)) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(LogPath, true), StandardCharsets.UTF_8))) {
             text = time +  text + '\n';
-            fileWriter.append(text);
+            bufferedWriter.append(text);
+            bufferedWriter.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

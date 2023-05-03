@@ -32,7 +32,13 @@ public class LrcUtil {
             return true;
         }
         //副语言歌词
-        String subLrc = responseObject.getJSONObject("tlyric").getString("lyric");
+        JSONObject subLrcObject = responseObject.getJSONObject("tlyric");
+        String subLrc;
+        if (subLrcObject == null) {
+            subLrc = "";
+        } else {
+            subLrc = subLrcObject.getString("lyric");
+        }
         if (language.isSub()) {
             if ("".equals(subLrc.trim())) {
                 LogUtil.log(id + "获取不到副语言,已被跳过");
