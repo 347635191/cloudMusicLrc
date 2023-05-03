@@ -1,6 +1,7 @@
 package com.music.cloud.lrc.util;
 
 import com.alibaba.fastjson.JSONObject;
+import com.music.cloud.lrc.constant.FileName;
 import com.music.cloud.lrc.constant.Language;
 
 import java.util.HashMap;
@@ -13,7 +14,7 @@ import java.util.regex.Pattern;
  * lyric?csrf_token= -> 右键Copy -> Copy Response
  */
 public class LrcUtil {
-    public static boolean makeLrc(String id, Language language) {
+    public static boolean makeLrc(String id, Language language, FileName fileName) {
         String lyricResponse = SpiderUtil.getLrcJson(id);
         if (lyricResponse == null) {
             return false;
@@ -101,7 +102,12 @@ public class LrcUtil {
         StringBuilder content = new StringBuilder();
         timeWordMap.forEach((time, word) -> content.append(time).append(word).append('\n'));
         String result = content.substring(0, content.length() - 1);
-        FileUtil.writeLrc(id, result);
+
+        String musicName = null;
+        if(fileName.isMusicName()){
+            musicName = SpiderUtil.getMusicName(id);
+        }
+        FileUtil.writeLrc(id, result, musicName);
         return true;
     }
 

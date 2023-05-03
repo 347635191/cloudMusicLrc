@@ -32,20 +32,40 @@ public class SpiderUtil {
     }
 
     public static String getLrcJson(String id) {
-        Document document = null;
+        Document document;
         Map<String, String> headMap = new HashMap<>();
         Map<String, String> paramMap = SpiderUtil.buildParamMap(id);
-        Connection con = Jsoup.connect("https://music.163.com/weapi/song/lyric?csrf_token=");
+        Connection connection = Jsoup.connect("https://music.163.com/weapi/song/lyric?csrf_token=");
         headMap.put("Content-Type", "application/x-www-form-urlencoded");
         headMap.put("Accept", "*/*");
-        con.headers(headMap);
-        con.data(paramMap);
+        connection.headers(headMap);
+        connection.data(paramMap);
         try {
-            document = con.post();
+            document = connection.post();
         } catch (IOException e) {
             LogUtil.log("请检查网络,音乐编号" + id + "及之后生成失败");
             return null;
         }
         return document.text();
+    }
+
+    public static String getMusicName(String id) {
+        Map<String, String> headMap = new HashMap<>();
+        headMap.put("Content-Type", "application/x-www-form-urlencoded");
+        headMap.put("Accept", "*/*");
+
+        String baseUrl = "https://music.163.com/song?id=%s";
+        Connection connection = Jsoup.connect(String.format(baseUrl, id));
+        connection.headers(headMap);
+        try {
+            String text = connection.get().text();
+            if ("".equals(text.trim()) || !text.contains("-")) {
+                return null;
+            }
+            return text.substring(0, text.indexOf("-")).trim();
+        } catch (IOException e) {
+            LogUtil.log(id + "获取歌曲名失败，文件名称用音乐编号替代");
+            return null;
+        }
     }
 }

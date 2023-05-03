@@ -9,11 +9,11 @@ public class FileUtil {
 
     private static final String DEFAULT_FILE_PATH = BASE_DIR + "\\%s.lrc";
 
-    public static void writeLrc(String id, String content) {
+    public static void writeLrc(String id, String content, String musicName) {
         if (createDir()) {
             return;
         }
-        String filePath = String.format(DEFAULT_FILE_PATH, id);
+        String filePath = String.format(DEFAULT_FILE_PATH, musicName == null ? id : musicName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath), StandardCharsets.UTF_8))) {
             bufferedWriter.append(content);
             bufferedWriter.flush();

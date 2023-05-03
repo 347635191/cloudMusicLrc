@@ -4,6 +4,7 @@ import com.music.cloud.lrc.component.IButton;
 import com.music.cloud.lrc.component.ILabel;
 import com.music.cloud.lrc.component.IRadioButton;
 import com.music.cloud.lrc.component.IText;
+import com.music.cloud.lrc.constant.FileName;
 import com.music.cloud.lrc.constant.Language;
 import com.music.cloud.lrc.util.LogUtil;
 import com.music.cloud.lrc.util.LrcUtil;
@@ -20,19 +21,25 @@ public class MainFrame extends JFrame {
 
     private final JTextField y = new IText(170, 55, 160, 30);
 
-    private final JRadioButton a = new IRadioButton("主语言", 50, 135, 80, 40, false);
+    private final JRadioButton a = new IRadioButton("主语言", 50, 120, 80, 40, false);
 
-    private final JRadioButton b = new IRadioButton("副语言", 150, 135, 80, 40, false);
+    private final JRadioButton b = new IRadioButton("副语言", 150, 120, 80, 40, false);
 
-    private final JRadioButton c = new IRadioButton("双语", 250, 135, 80, 40, true);
+    private final JRadioButton c = new IRadioButton("双语", 250, 120, 80, 40, true);
+
+    private final JRadioButton e = new IRadioButton("音乐编号", 100, 190, 100, 40, false);
+
+    private final JRadioButton f = new IRadioButton("歌曲名", 200, 190, 80, 40, true);
 
     private final ButtonGroup group = new ButtonGroup();
+
+    private final ButtonGroup nameGroup = new ButtonGroup();
 
     private final JButton button = new IButton("下载", 158, 335, 70, 40);
 
     private final JLabel label = new ILabel("多个音乐编号请用英文逗号隔开", 14, new Color(62, 125, 62), 148, 16, 280, 40);
 
-    private final JLabel label1 = new ILabel("歌词文件和日志生成在D盘的lrc目录中", 16, new Color(62, 125, 62), 58, 220, 280, 40);
+    private final JLabel label1 = new ILabel("歌词文件和日志生成在D盘的lrc目录中", 16, new Color(62, 125, 62), 58, 270, 280, 40);
 
     public volatile static MainFrame mainFrame;
 
@@ -61,9 +68,13 @@ public class MainFrame extends JFrame {
         group.add(a);
         group.add(b);
         group.add(c);
+        nameGroup.add(e);
+        nameGroup.add(f);
         contentPane.add(a);
         contentPane.add(b);
         contentPane.add(c);
+        contentPane.add(e);
+        contentPane.add(f);
         contentPane.add(button);
         contentPane.add(label);
         contentPane.add(label1);
@@ -88,7 +99,11 @@ public class MainFrame extends JFrame {
                 if (b.isSelected()) {
                     language = Language.SUB;
                 }
-                boolean isContinue = LrcUtil.makeLrc(id, language);
+                FileName fileName = FileName.MUSIC_NAME;
+                if(e.isSelected()){
+                    fileName = FileName.MUSIC_ID;
+                }
+                boolean isContinue = LrcUtil.makeLrc(id, language, fileName);
                 if (!isContinue) {
                     JOptionPane.showMessageDialog(null, "请检查您的网络");
                     break;
@@ -109,6 +124,8 @@ public class MainFrame extends JFrame {
         a.setEnabled(false);
         b.setEnabled(false);
         c.setEnabled(false);
+        e.setEnabled(false);
+        f.setEnabled(false);
     }
 
     /**
@@ -119,6 +136,8 @@ public class MainFrame extends JFrame {
         a.setEnabled(true);
         b.setEnabled(true);
         c.setEnabled(true);
+        e.setEnabled(true);
+        f.setEnabled(true);
     }
 
     public static void main(String[] args) {
