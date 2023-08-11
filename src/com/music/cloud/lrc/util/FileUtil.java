@@ -13,7 +13,7 @@ public class FileUtil {
         if (createDir()) {
             return;
         }
-        String filePath = String.format(DEFAULT_FILE_PATH, musicName == null ? id : musicName);
+        String filePath = String.format(DEFAULT_FILE_PATH, musicName == null ? id : musicName.trim().replaceAll("[\\\\/:*?\"<>|]", ""));
         try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath), StandardCharsets.UTF_8))) {
             bufferedWriter.append(content);
             bufferedWriter.flush();
